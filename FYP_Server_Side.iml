@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="com.esotericsoftware:kryonet:2.22.0-RC1" level="project" />
     <orderEntry type="library" name="com.firebase:firebase-client-jvm:2.5.2" level="project" />
+    <orderEntry type="library" name="com.github.mpkorstanje:simmetrics-core:3.0.0" level="project" />
   </component>
 </module>

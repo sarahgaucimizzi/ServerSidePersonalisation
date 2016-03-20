@@ -1,5 +1,8 @@
 package com.sarahmizzi;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by Sarah on 16-Mar-16.
  */
@@ -9,7 +12,12 @@ public class Video {
     String category;
     String[] tags;
 
-    public Video(String id, String title, String category, String[] tags) {
+    @JsonCreator
+    public Video(@JsonProperty("id") String id,
+                 @JsonProperty("title") String title,
+                 @JsonProperty("category") String category,
+                 @JsonProperty("tags") String[] tags) {
+
         this.id = id;
         this.title = title;
         this.category = category;
