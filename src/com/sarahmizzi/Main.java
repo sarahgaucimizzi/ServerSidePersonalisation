@@ -137,7 +137,7 @@ public class Main {
                                             for (DataSnapshot current : movieQuerySnapshot.getChildren()) {
                                                 Movie movie = current.getValue(Movie.class);
 
-                                                StringMetric metric = StringMetrics.blockDistance();
+                                                StringMetric metric = StringMetrics.mongeElkan();
 
                                                 float result = metric.compare(movieToSearch, movie.getTitle());
 
