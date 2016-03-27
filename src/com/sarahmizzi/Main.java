@@ -9,6 +9,7 @@ import org.simmetrics.StringMetric;
 import org.simmetrics.StringMetrics;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,7 +20,8 @@ import java.util.logging.Logger;
 public class Main {
 
     public static void main(String[] args) {
-
+        UIManager.put("OptionPane.messageFont", new Font("System", Font.PLAIN, 30));
+        UIManager.put("OptionPane.buttonFont", new Font("System", Font.PLAIN, 30));
         Logger Log = Logger.getLogger(Main.class.getName());
         JFrame frame = new JFrame();
         Server server = new Server();
@@ -101,6 +103,10 @@ public class Main {
                                             Log.severe(e.getMessage());
                                         }
                                     }
+
+                                    TcpResponse response = new TcpResponse();
+                                    response.message = "OK";
+                                    connection.sendTCP(response);
 
                                     break;
                                 case "Thriller":
@@ -190,6 +196,10 @@ public class Main {
                                                     Log.severe(e.getMessage());
                                                 }
                                             }
+
+                                            TcpResponse response = new TcpResponse();
+                                            response.message = "OK";
+                                            connection.sendTCP(response);
                                         }
 
                                         @Override
@@ -247,11 +257,20 @@ public class Main {
                                         }
                                     }
 
+                                    TcpResponse musicResponse = new TcpResponse();
+                                    musicResponse.message = "OK";
+                                    connection.sendTCP(musicResponse);
+
                                     break;
 
                                 default:
                                     JOptionPane.showMessageDialog(frame, "Please try again on another video.", "More Information",
                                             JOptionPane.PLAIN_MESSAGE);
+
+                                    TcpResponse defaultResponse = new TcpResponse();
+                                    defaultResponse.message = "OK";
+                                    connection.sendTCP(defaultResponse);
+
                                     break;
                             }
 
@@ -263,10 +282,6 @@ public class Main {
                             Log.severe(error.getMessage());
                         }
                     });
-
-                    TcpResponse response = new TcpResponse();
-                    response.message = "OK";
-                    connection.sendTCP(response);
                 }
             }
         });
