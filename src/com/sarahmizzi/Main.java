@@ -7,7 +7,6 @@ import com.esotericsoftware.kryonet.Server;
 import com.firebase.client.*;
 import org.simmetrics.StringMetric;
 import org.simmetrics.StringMetrics;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -20,20 +19,24 @@ import java.util.logging.Logger;
 public class Main {
 
     public static void main(String[] args) {
+        // Setup dialog
         UIManager.put("OptionPane.messageFont", new Font("System", Font.PLAIN, 30));
         UIManager.put("OptionPane.buttonFont", new Font("System", Font.PLAIN, 30));
         Logger Log = Logger.getLogger(Main.class.getName());
         JFrame frame = new JFrame();
-        Server server = new Server();
 
+        // Create server
+        Server server = new Server();
         Kryo kryo = server.getKryo();
         kryo.register(TcpRequest.class);
         kryo.register(TcpResponse.class);
 
+        // Prompt user to start server
         int startConnection = JOptionPane.showConfirmDialog(frame, "Would you like to start connection?", "Connection",
                 JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (startConnection == JOptionPane.YES_OPTION) {
+            // If 'Yes' start server and listen to port 81
             server.start();
             try {
                 server.bind(81);
@@ -48,9 +51,11 @@ public class Main {
         server.addListener(new Listener() {
             public void received(Connection connection, Object object) {
                 if (object instanceof TcpRequest) {
+                    // Get request from client, message should contain userID requesting more information
                     TcpRequest tcpRequest = (TcpRequest) object;
                     System.out.println(tcpRequest.message);
 
+                    // Retrieve last video transaction of user
                     Firebase videoFirebaseRef = new Firebase("https://sweltering-torch-8619.firebaseio.com/android/video/");
                     Query queryRef = videoFirebaseRef.child(tcpRequest.message).limitToLast(1);
 
@@ -61,6 +66,7 @@ public class Main {
 
                             URI uri = null;
 
+                            // Check video category to show appropriate more information about video title
                             switch (video.getCategory()) {
                                 case "Sports":
                                     Object[] footballOptions = {"Open Skysports",
@@ -104,6 +110,7 @@ public class Main {
                                         }
                                     }
 
+                                    // Send response to client that user is ready from more information
                                     TcpResponse response = new TcpResponse();
                                     response.message = "OK";
                                     connection.sendTCP(response);
@@ -131,6 +138,7 @@ public class Main {
                                     String tempD = tempC.replace("-", "");
                                     String movieToSearch = tempD.replace("Trailer", "");
 
+                                    // Use string metric library to search for closest movie title to search video title
                                     Firebase movieFirebaseRef = new Firebase("https://sweltering-torch-8619.firebaseio.com/android/");
                                     Query movieQueryRef = movieFirebaseRef.child("movies");
 
@@ -197,6 +205,7 @@ public class Main {
                                                 }
                                             }
 
+                                            // Send response to client that user is ready from more information
                                             TcpResponse response = new TcpResponse();
                                             response.message = "OK";
                                             connection.sendTCP(response);
@@ -257,6 +266,7 @@ public class Main {
                                         }
                                     }
 
+                                    // Send response to client that user is ready from more information
                                     TcpResponse musicResponse = new TcpResponse();
                                     musicResponse.message = "OK";
                                     connection.sendTCP(musicResponse);
@@ -264,6 +274,7 @@ public class Main {
                                     break;
 
                                 default:
+                                    // If category is not within case study display 'Try Again'
                                     JOptionPane.showMessageDialog(frame, "Please try again on another video.", "More Information",
                                             JOptionPane.PLAIN_MESSAGE);
 
